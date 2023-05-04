@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { CliCommandInterface } from './cli-command.interface';
 import path from 'node:path';
 
-export default class Version implements CliCommandInterface {
+export default class VersionCommand implements CliCommandInterface {
   public readonly name = '--version';
 
   public async readVersion(): Promise<string> {
