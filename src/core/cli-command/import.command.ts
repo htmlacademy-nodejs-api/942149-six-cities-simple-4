@@ -1,5 +1,6 @@
 import { CliCommandInterface } from './cli-command.interface';
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
+import chalk from 'chalk';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
@@ -7,7 +8,7 @@ export default class ImportCommand implements CliCommandInterface {
   public run(filepath: string): void {
     const normalizedFilepath = filepath?.trim();
     if (!normalizedFilepath) {
-      return console.log('Не указан путь к файлу');
+      return console.log(chalk.bold.red('Не указан путь к файлу'));
     }
     const fileReader = new TSVFileReader(normalizedFilepath);
 
@@ -20,7 +21,7 @@ export default class ImportCommand implements CliCommandInterface {
         throw err;
       }
 
-      console.log(`Не удалось импортировать данные из файла по причине: «${err.message}»`);
+      console.log(chalk.bold.red(`Не удалось импортировать данные из файла по причине: «${err.message}»`));
     }
   }
 }
