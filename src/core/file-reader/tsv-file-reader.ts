@@ -47,7 +47,7 @@ export default class TSVFileReader implements FileReaderInterface {
         city: city as City,
         preview,
         images: images.split(','),
-        isPremium: Boolean(isPremium),
+        isPremium: isPremium.toLowerCase() === 'true',
         ratingValue: Number(rating),
         offerType: OfferType[type as 'Apartment' | 'House' | 'Room' | 'Hotel'],
         roomsCount: Number(roomsCount),
