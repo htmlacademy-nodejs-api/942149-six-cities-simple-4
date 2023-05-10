@@ -39,12 +39,28 @@ export default class OfferGenerator implements OfferGeneratorInterface {
   public generate(): string {
     const title = getRandomItem<string>(this.mockData.titles);
     const description = getRandomItem<string>(this.mockData.descriptions);
+    const date = dayjs().subtract(generateRandomValue(INTERVAL.durationInDays.min, INTERVAL.durationInDays.max), 'day').toISOString();
+    const city = getRandomItem<{ name: string, coords: string }>(this.mockData.cities);
+    const cityName = city.name;
+    const coords = city.coords;
+    const preview = getRandomItem<string>(this.mockData.images);
+    const images = Array(PHOTO_OFFER_COUNT).fill((()=> getRandomItem<string>(this.mockData.images))());
+    const isPremium = Boolean(generateRandomValue(0, 1));
+    const ratingValue = generateRandomValue(INTERVAL.rating.min, INTERVAL.rating.max, 1);
+    const offerType = getRandomItem<string>(this.mockData.offerTypes);
+    const roomsCount = generateRandomValue(INTERVAL.rooms.min, INTERVAL.rooms.max);
+    const guestsCount = generateRandomValue(INTERVAL.guests.min, INTERVAL.guests.max);
+    const price = generateRandomValue(INTERVAL.price.min, INTERVAL.price.max);
+    const amenitiesList = getRandomItems<string>(this.mockData.amenities).join(',');
+    const author = getRandomItem<string>(this.mockData.authors);
+    const commentsCount = generateRandomValue(INTERVAL.comments.min, INTERVAL.comments.max);
+
 
     return [
       title,
       description,
-      postDate,
-      city,
+      date,
+      cityName,
       preview,
       images,
       isPremium,
