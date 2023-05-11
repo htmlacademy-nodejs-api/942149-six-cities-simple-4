@@ -8,7 +8,7 @@ import TSVFileWriter from '../file-writer/tsv-file-writer.js';
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name = '--generate';
   private initialData!: MockData;
-  private async clearFile(filepath: string): Promise<void> {
+  private static async clearFile(filepath: string): Promise<void> {
     try {
       await writeFile(filepath, '', { encoding: 'utf8', flag: 'w' });
       console.log('The file has been successfully cleaned');
@@ -28,7 +28,7 @@ export default class GenerateCommand implements CliCommandInterface {
     }
     const offerGeneratorString = new OfferGenerator(this.initialData);
 
-    await this.clearFile(filepath);
+    await GenerateCommand.clearFile(filepath);
 
     const tsvFileWriter = new TSVFileWriter(filepath);
 
