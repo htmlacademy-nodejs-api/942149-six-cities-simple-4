@@ -1,0 +1,77 @@
+{
+  "api": {
+    "titles": [
+      "Ruby Emma Hotel AmsterdamOpens in new window",
+      "Leonardo Hotel Amsterdam Rembrandtpark",
+      "Park Inn by Radisson",
+      "Hotel Estheréa",
+      "The Alfred HotelOpens in new window"
+    ],
+    "descriptions": [
+      "Located in Amsterdam, 2.3 miles from A'DAM Lookout, Tribe Amsterdam City has accommodations with a fitness center, private parking, a shared lounge and a bar.",
+      "Hotel Estheréa is set along the Singel canal in the center of Amsterdam, only 984 feet from Dam Square. This hotel is in a quiet area and benefits from classically-styled decor with wooden paneling.",
+      "This quaint hotel offers rooms with antique furniture and free Wi-Fi in a picturesque area of Amsterdam, a 10-minute walk from the Anne Frank House.",
+      "Located in Amsterdam, 1476 ft from Amsterdam RAI, nhow Amsterdam Rai provides accommodations with a fitness center, private parking, a bar and a terrace.",
+      "Located in the heart of Amsterdam at the business district of Zuidas, INNSiDE by Meliá Amsterdam offers accommodations with free WiFi."
+    ],
+    "cities": [
+      {
+        "name": "Paris",
+        "coords": "48.864716,2.349014"
+      },
+      {
+        "name": "Cologne",
+        "coords": "50.935173,6.953101"
+      },
+      {
+        "name": "Brussels",
+        "coords": "5634053,9661267"
+      },
+      {
+        "name": "Amsterdam",
+        "coords": "52.370216,4.895168"
+      },
+      {
+        "name": "Hamburg",
+        "coords": "53.551086,9.993682"
+      },
+      {
+        "name": "Dusseldorf",
+        "coords": "51.233334,6.783333"
+      }
+    ],
+    "images": [
+      "https://cf.bstatic.com/xdata/images/hotel/max500/242662443.jpg?k=3c75ceb147056d7832ac68fef7d34557444dfc2908556f285d33dd5c754c43b2&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max500/242662443.jpg?k=3c75ceb147056d7832ac68fef7d34557444dfc2908556f285d33dd5c754c43b2&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max500/242662443.jpg?k=3c75ceb147056d7832ac68fef7d34557444dfc2908556f285d33dd5c754c43b2&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max500/242662443.jpg?k=3c75ceb147056d7832ac68fef7d34557444dfc2908556f285d33dd5c754c43b2&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max500/242662443.jpg?k=3c75ceb147056d7832ac68fef7d34557444dfc2908556f285d33dd5c754c43b2&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max500/242662443.jpg?k=3c75ceb147056d7832ac68fef7d34557444dfc2908556f285d33dd5c754c43b2&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max500/447941900.jpg?k=9d34fa52d406b40e189b85e5970e9f703fb2c20e6b81c99191e62eb60ac86408&o=&hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max1024x768/447941882.jpg?k=ee57761ce439a6d7b5c0f2845e325ce82fc8288097d89539627bfc7f16e53075&amp;o=&amp;hp=1",
+      "https://cf.bstatic.com/xdata/images/hotel/max1024x768/447941940.jpg?k=1af6dc158f6b342619a958a940f3425da4b388a35f8973e10ede96ed2e3bc11f&amp;o=&amp;hp=1"
+    ],
+    "offerTypes": [
+      "Apartment",
+      "House",
+      "Room",
+      "Hotel"
+    ],
+    "amenities": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "authors": [
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=Abby",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=Boots",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=Charlie",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=Harley",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=Cali"
+    ]
+  }
+}

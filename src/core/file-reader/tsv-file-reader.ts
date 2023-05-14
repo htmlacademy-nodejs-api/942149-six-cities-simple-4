@@ -1,62 +1,40 @@
-import { readFileSync } from 'node:fs';
+import EventEmitter from 'node:events';
+import { createInterface } from 'node:readline/promises';
+import { createReadStream, statSync } from 'node:fs';
 import { FileReaderInterface } from './file-reader.interface.js';
-import { Offer } from '../../types/offer.type.js';
-import { OfferType } from '../../types/offer-type.enum.js';
-import { Amenities } from '../../types/amenities.type';
-import { City } from '../../types/сity.type';
 
-export default class TSVFileReader implements FileReaderInterface {
-  private rawData = '';
+const CHUNK_SIZE = 2 ** 11;
 
-  constructor(public filename: string) { }
-
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf8' });
+export default class TSVFileReader extends EventEmitter implements FileReaderInterface {
+  constructor(public filename: string) {
+    super();
   }
 
-  public toArray(): Offer[] {
-    if (!this.rawData) {
-      return [];
-    }
+  private getFileSizeInkBytes(filename: string): string {
+    const stats = statSync(filename);
+    return (stats.size / 2 ** 10).toFixed(2);
+  }
 
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('\t'))
-      .map(([
-        offerTitle,
-        description,
-        date,
-        city,
-        preview,
-        images,
-        isPremium,
-        rating,
-        type,
-        roomsCount,
-        guestsCount,
-        price,
-        amenities,
-        author,
-        commentsCount,
-        coords,
-      ]) => ({
-        offerTitle,
-        description,
-        postDate: new Date(date),
-        city: city as City,
-        preview,
-        images: images.split(','),
-        isPremium: isPremium.toLowerCase() === 'true',
-        ratingValue: Number(rating),
-        offerType: OfferType[type as 'Apartment' | 'House' | 'Room' | 'Hotel'],
-        roomsCount: Number(roomsCount),
-        guestsCount: Number(guestsCount),
-        price: Number(price),
-        amenitiesList: amenities.split(',') as Amenities[],
-        author: author,
-        commentsCount: Number(commentsCount),
-        coords: coords,
-      }));
+  public async read(): Promise<void> {
+    const fileSize = this.getFileSizeInkBytes(this.filename);
+    console.log(`starts reading the file with size ${fileSize} kB`);
+    const stream = createReadStream(this.filename, {
+      highWaterMark: CHUNK_SIZE,
+      encoding: 'utf-8',
+    });
+
+    let importedLineCount = 0;
+
+    const readLine = createInterface({
+      input: stream,
+      crlfDelay: Infinity
+    });
+
+    readLine.on('line', (line) => {
+      importedLineCount++;
+      this.emit('line', line);
+    });
+
+    readLine.on('close', () => this.emit('end', importedLineCount));
   }
 }
