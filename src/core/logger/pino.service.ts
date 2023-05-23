@@ -1,6 +1,5 @@
 import { LoggerInterface } from './logger.interface.js';
 import { Logger, pino } from 'pino';
-import { createWriteStream } from 'node:fs';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -8,8 +7,11 @@ export default class PinoService implements LoggerInterface {
   private readonly logger: Logger;
 
   constructor() {
-    const stream = createWriteStream('logs.log', { flags: 'a' });
-    this.logger = pino(stream);
+    const transport = pino.transport({
+      target: 'pino/file',
+      options: { destination: 'logs.log' }
+    });
+    this.logger = pino(transport);
   }
 
   public debug(message: string, ...args: unknown[]): void {
