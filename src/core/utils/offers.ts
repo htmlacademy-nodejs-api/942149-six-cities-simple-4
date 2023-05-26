@@ -2,6 +2,7 @@ import { Offer } from '../../types/offer.type.js';
 import { OfferType } from '../../types/offer-type.enum.js';
 import { Amenities } from '../../types/amenities.type';
 import { City } from '../../types/сity.type';
+import { UserType } from '../../types/user-type.enum';
 
 export function createOffer(offerData: string): Offer {
   const [
@@ -18,7 +19,10 @@ export function createOffer(offerData: string): Offer {
     guestsCount,
     price,
     amenities,
-    author,
+    userName,
+    userEmail,
+    userPath,
+    userType,
     commentsCount,
     coords,
   ] = offerData.replace('\n', '').split('\t');
@@ -37,7 +41,12 @@ export function createOffer(offerData: string): Offer {
     guestsCount: Number(guestsCount),
     price: Number(price),
     amenitiesList: amenities.split(',') as Amenities[],
-    author: author,
+    author: {
+      name: userName,
+      email: userEmail,
+      avatarPath: userPath,
+      type: userType as UserType,
+    },
     commentsCount: Number(commentsCount),
     coords: coords,
   } as Offer;

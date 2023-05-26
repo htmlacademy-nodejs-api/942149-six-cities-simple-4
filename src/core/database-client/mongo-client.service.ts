@@ -39,13 +39,18 @@ export default class MongoClientService implements DatabaseClientInterface {
     throw new Error('Failed to connect to the database');
   }
 
+  private async _connect(uri:string): Promise<void> {
+    this.mongooseInstance = await this._connectWithRetry(uri);
+    this.isConnected = true;
+  }
+
   public async connect(uri: string): Promise<void> {
     if (this.isConnected) {
       throw new Error('MongoDB client already connected');
     }
 
     this.logger.info(`Trying to connect to MongoDB with ${uri}`);
-    await this._connectWithRetry(uri);
+    await this._connect(uri);
     this.logger.info('Database connection established.');
   }
 

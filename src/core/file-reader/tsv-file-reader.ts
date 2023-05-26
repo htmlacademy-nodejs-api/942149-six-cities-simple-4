@@ -30,11 +30,24 @@ export default class TSVFileReader extends EventEmitter implements FileReaderInt
       crlfDelay: Infinity
     });
 
+    const promisesArray:Promise<any>[] = [];
+
     readLine.on('line', (line) => {
       importedLineCount++;
-      this.emit('line', line);
+      const promise = new Promise((resolve) => {
+        this.emit('line', line, resolve);
+      });
+      promisesArray.push(promise);
     });
 
-    readLine.on('close', () => this.emit('end', importedLineCount));
+    readLine.on('close', () => {
+      Promise.all(promisesArray)
+        .then(() => {
+          this.emit('end', importedLineCount);
+        })
+        .catch((err) => {
+          console.log(`something went wrong, ${err}`);
+        });
+    });
   }
 }

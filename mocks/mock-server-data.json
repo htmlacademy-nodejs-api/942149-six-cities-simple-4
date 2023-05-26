@@ -66,12 +66,34 @@
       "Towels",
       "Fridge"
     ],
-    "authors": [
+    "avatars": [
       "https://api.dicebear.com/6.x/adventurer/svg?seed=Abby",
       "https://api.dicebear.com/6.x/adventurer/svg?seed=Boots",
       "https://api.dicebear.com/6.x/adventurer/svg?seed=Charlie",
       "https://api.dicebear.com/6.x/adventurer/svg?seed=Harley",
       "https://api.dicebear.com/6.x/adventurer/svg?seed=Cali"
+    ],
+    "names": [
+      "Billy",
+      "Joshua",
+      "Marcelo",
+      "Harley",
+      "Cali"
+    ],
+    "emails": [
+      "Billy@mail.ru",
+      "Joshua@mail.ru",
+      "Marcelo@mail.ru",
+      "Harley@mail.ru",
+      "Cali@mail.ru",
+      "heilloiffeikauda-2558@yopmail.com",
+      "yaubrafreijupou-5869@yopmail.com",
+      "zeifrefulloha-8199@yopmail.com",
+      "roveimmexelle-6523@yopmail.com"
+    ],
+    "userTypes": [
+      "pro",
+      "standard"
     ]
   }
 }
