@@ -54,4 +54,27 @@ export default class OfferService implements OfferServiceInterface {
       .populate(['userId'])
       .exec();
   }
+
+  public async calcOfferRating(offerId: string): Promise<number | null> {
+    const values = await this.offerModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'comment',
+            pipeline: [
+              { $match: { offerId: offerId } },
+              { $project: { rating: 1}}
+            ],
+            as: 'ratingValues'
+          },
+        },
+        {
+          $project: {
+            averageRating: { $avg: '$ratingValues.rating' }
+          }
+        }
+      ]).exec();
+
+    return values[0]?.averageRating || 0;
+  }
 }
