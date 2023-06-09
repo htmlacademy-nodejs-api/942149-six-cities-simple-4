@@ -6,7 +6,7 @@ import { LoggerInterface } from '../../core/logger/logger.interface.js';
 import { OfferServiceInterface } from './offer-service.interface.js';
 import UpdateOfferDto from './dto/update-offer.dto';
 import CreateOfferDto from './dto/create-offer.dto.js';
-import {DEFAULT_OFFER_COUNT} from './offer.constant';
+import { DEFAULT_OFFER_COUNT } from './offer.constant.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
