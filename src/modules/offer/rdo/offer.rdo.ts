@@ -1,7 +1,8 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { City } from '../../../types/сity.type.js';
 import { OfferType } from '../../../types/offer-type.enum.js';
 import { Amenities } from '../../../types/amenities.type.js';
+import UserRdo from '../../user/rdo/user.rdo.js';
 
 export default class OfferRdo {
   @Expose()
@@ -47,6 +48,7 @@ export default class OfferRdo {
   public amenitiesList!: Amenities[];
 
   @Expose()
+  @Type(() => UserRdo)
   public userId!: string;
 
   @Expose()
