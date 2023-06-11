@@ -1,0 +1,24 @@
+## Добавить новое предложение
+POST http://localhost:5500/offers HTTP/1.1
+Content-Type: application/json
+
+{
+  "offerTitle": "Ruby Emma Hotel AmsterdamOpens in new window",
+  "description": " in Amster",
+  "postDate": "2023-05-12T14:44:05.182Z",
+  "city": "Paris",
+  "preview": "3.jpg?k=3c75ceb147056d7832a",
+  "images": "111.jpg",
+  "isPremium": "true",
+  "ratingValue": 1,
+  "offerType": "Apartment",
+  "roomsCount": 1,
+  "guestsCount": 1,
+  "price": 1,
+  "amenitiesList": "",
+  "userId": "6470d52792d9ad3ab41c59a4",
+  "commentsCount": 1,
+  "coords": "123,122"
+}
+
+###

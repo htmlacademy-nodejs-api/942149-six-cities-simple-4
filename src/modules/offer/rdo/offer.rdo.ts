@@ -47,9 +47,9 @@ export default class OfferRdo {
   @Expose()
   public amenitiesList!: Amenities[];
 
-  @Expose()
+  @Expose({ name: 'userId'})
   @Type(() => UserRdo)
-  public userId!: string;
+  public user!: UserRdo;
 
   @Expose()
   public commentsCount!: number;

@@ -7,6 +7,15 @@ import { HttpMethod } from '../../types/http-method.enum.js';
 import { OfferServiceInterface } from './offer-service.interface.js';
 import { fillDTO } from '../../core/utils/common.js';
 import OfferRdo from './rdo/offer.rdo.js';
+import CreateOfferDto from './dto/create-offer.dto';
+import UpdateOfferDto from './dto/update-offer.dto';
+import { ParamsDictionary } from 'express-serve-static-core';
+import HttpError from '../../core/errors/http-error.js';
+import {StatusCodes} from 'http-status-codes';
+
+type OfferDetailsParams = {
+  offerId: string;
+} | ParamsDictionary
 
 @injectable()
 export default class OfferController extends Controller {
@@ -20,15 +29,59 @@ export default class OfferController extends Controller {
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Patch, handler: this.update});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.getDetails});
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offersService.findSomeOffers();
+  public async index(
+    { query }: Request<unknown>,
+    res: Response
+  ): Promise<void> {
+    const offers = await this.offersService.findSomeOffers(Number(query.limit) || 0);
     const offersToResponse = fillDTO(OfferRdo, offers);
     this.ok(res, offersToResponse);
   }
 
-  public create(_req: Request, _res: Response): void {
-    // Код обработчика
+  public async create(
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
+    res: Response
+  ): Promise<void> {
+    const result = await this.offersService.create({ ...body});
+    const offerToResponse = fillDTO(OfferRdo, result);
+    this.created<OfferRdo>(res, offerToResponse);
+  }
+
+  public async update(
+    { body, params }: Request<OfferDetailsParams, Record<string, unknown>, UpdateOfferDto>,
+    res: Response
+  ): Promise<void> {
+    const updatedOffer = await this.offersService.updateById(params.offerId, body);
+    const offersToResponse = fillDTO(OfferRdo, updatedOffer);
+    this.ok<OfferRdo>(res, offersToResponse);
+  }
+
+  public async delete(
+    { params }: Request<OfferDetailsParams>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const offer = await this.offersService.deleteById(offerId);
+    this.noContent(res, offer);
+  }
+
+  public async getDetails(
+    { params }: Request<OfferDetailsParams>,
+    res: Response
+  ): Promise<void> {
+    const offer = await this.offersService.findById(params.offerId);
+    if (!offer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        'offer not found'
+      );
+    }
+    const offersToResponse = fillDTO(OfferRdo, offer);
+    this.ok(res, offersToResponse);
   }
 }
