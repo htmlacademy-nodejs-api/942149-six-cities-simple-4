@@ -11,4 +11,5 @@ export interface OfferServiceInterface {
   updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   findSomeOffers(count?: number): Promise<DocumentType<OfferEntity>[]>;
   calcOfferRating(offerId: string): Promise<number | null>;
+  exists(offerId: string): Promise<boolean>;
 }

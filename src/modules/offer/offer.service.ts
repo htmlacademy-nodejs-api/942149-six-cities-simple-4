@@ -77,4 +77,9 @@ export default class OfferService implements OfferServiceInterface {
 
     return values[0]?.averageRating || 0;
   }
+
+  public async exists(offerId: string): Promise<boolean> {
+    return (await this.offerModel
+      .exists({_id: offerId})) !== null;
+  }
 }

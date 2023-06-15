@@ -4,6 +4,7 @@ import { CommentServiceInterface } from './comment-service.interface.js';
 import { AppComponent } from '../../types/app-component.enum.js';
 import CreateCommentDto from './dto/create-comment.dto.js';
 import { CommentEntity } from './comment.entity.js';
+import { DEFAULT_COMMENTS_COUNT } from './comment.constants.js';
 
 @injectable()
 export default class CommentService implements CommentServiceInterface {
@@ -17,8 +18,10 @@ export default class CommentService implements CommentServiceInterface {
   }
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
+    const limit = DEFAULT_COMMENTS_COUNT;
     return this.commentModel
       .find({offerId})
+      .limit(limit)
       .populate('userId');
   }
 
