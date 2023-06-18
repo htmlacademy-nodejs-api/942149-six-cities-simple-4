@@ -3,6 +3,7 @@ import { OfferType } from '../../types/offer-type.enum.js';
 import { UserEntity } from '../user/user.entity.js';
 import { City } from '../../types/сity.type';
 import { Amenities } from '../../types/amenities.type';
+import { Coordinates } from '../../types/coordinates.type';
 
 const { prop, modelOptions } = typegoose;
 
@@ -65,8 +66,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({default: 0})
   public commentCount!: number;
 
-  @prop({trim: true})
-  public coords!: string;
+  @prop({required: true})
+  public coords!: Coordinates;
 }
 
 export const OfferModel = getModelForClass(OfferEntity);
