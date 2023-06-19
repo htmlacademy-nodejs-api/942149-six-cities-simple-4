@@ -53,6 +53,14 @@ export default class CommentController extends Controller {
     { params }: Request<OfferDetailsParams>,
     res: Response
   ): Promise<void> {
+    if (!await this.offerService.exists(params.offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${params.offerId} not found.`,
+        'OfferController'
+      );
+    }
+
     const comments = await this.commentService.findByOfferId(params.offerId);
     const commentsToResponse = fillDTO(CommentRdo, comments);
     this.ok(res, commentsToResponse);
