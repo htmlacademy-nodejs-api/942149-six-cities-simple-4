@@ -41,9 +41,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     type: () => String,
-    enum: OfferType
+    enum: OfferType,
+    required: true
   })
-  public OfferType!: OfferType;
+  public offerType!: OfferType;
 
   @prop({required: true})
   public roomsCount!: number;
