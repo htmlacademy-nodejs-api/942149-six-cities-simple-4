@@ -48,6 +48,8 @@ export function createOffer(offerData: string): Offer {
       type: userType as UserType,
     },
     commentsCount: Number(commentsCount),
-    coords: coords,
+    coords: {
+      latitude: coords.split(',')[0],
+      longitude: coords.split(',')[1]},
   } as Offer;
 }
