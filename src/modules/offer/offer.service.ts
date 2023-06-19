@@ -7,6 +7,7 @@ import { OfferServiceInterface } from './offer-service.interface.js';
 import UpdateOfferDto from './dto/update-offer.dto';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import { DEFAULT_OFFER_COUNT } from './offer.constant.js';
+import { SortType } from '../../types/sort.type.enum.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -22,14 +23,15 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findById(offerId).exec();
+    return this.offerModel.findById(offerId).populate(['userId']).exec();
   }
 
   public async find(): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
+    const offer = await this.offerModel
       .find()
       .populate(['userId'])
       .exec();
+    return offer;
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
@@ -47,11 +49,14 @@ export default class OfferService implements OfferServiceInterface {
 
   public async findSomeOffers(count: number): Promise<DocumentType<OfferEntity>[]> {
     const limit = count ?? DEFAULT_OFFER_COUNT;
-    return this.offerModel
+    const offers = await this.offerModel
       .find()
+      .sort({createdAt: SortType.Down})
       .limit(limit)
       .populate(['userId'])
       .exec();
+
+    return offers;
   }
 
   public async calcOfferRating(offerId: string): Promise<number | null> {
@@ -69,7 +74,7 @@ export default class OfferService implements OfferServiceInterface {
         },
         {
           $project: {
-            averageRating: { $avg: '$ratingValues.rating' }
+            averageRating: { $avg: '$ratingValues.rating' },
           }
         }
       ]).exec();
@@ -80,5 +85,19 @@ export default class OfferService implements OfferServiceInterface {
   public async exists(offerId: string): Promise<boolean> {
     return (await this.offerModel
       .exists({_id: offerId})) !== null;
+  }
+
+  public async incCommentsCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(
+        offerId,
+        {
+          $inc: {
+            commentsCount: 1,
+          },
+        },
+        { new: true },
+      )
+      .exec();
   }
 }

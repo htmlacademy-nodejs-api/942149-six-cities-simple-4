@@ -7,6 +7,7 @@ import { HttpMethod } from '../../types/http-method.enum.js';
 import { OfferServiceInterface } from './offer-service.interface.js';
 import { fillDTO } from '../../core/utils/common.js';
 import OfferRdo from './rdo/offer.rdo.js';
+import ExtendedOfferRdo from './rdo/extended-offer.rdo.js';
 import CreateOfferDto from './dto/create-offer.dto';
 import UpdateOfferDto from './dto/update-offer.dto';
 import { ParamsDictionary } from 'express-serve-static-core';
@@ -48,7 +49,7 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const result = await this.offersService.create({ ...body});
-    const offerToResponse = fillDTO(OfferRdo, result);
+    const offerToResponse = fillDTO(ExtendedOfferRdo, result);
     this.created<OfferRdo>(res, offerToResponse);
   }
 
@@ -57,7 +58,7 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const updatedOffer = await this.offersService.updateById(params.offerId, body);
-    const offersToResponse = fillDTO(OfferRdo, updatedOffer);
+    const offersToResponse = fillDTO(ExtendedOfferRdo, updatedOffer);
     this.ok<OfferRdo>(res, offersToResponse);
   }
 
@@ -81,7 +82,7 @@ export default class OfferController extends Controller {
         'offer not found'
       );
     }
-    const offersToResponse = fillDTO(OfferRdo, offer);
+    const offersToResponse = fillDTO(ExtendedOfferRdo, offer);
     this.ok(res, offersToResponse);
   }
 }

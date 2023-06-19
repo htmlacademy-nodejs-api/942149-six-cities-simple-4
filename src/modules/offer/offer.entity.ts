@@ -43,7 +43,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     type: () => String,
     enum: OfferType
   })
-  public type!: OfferType;
+  public OfferType!: OfferType;
 
   @prop({required: true})
   public roomsCount!: number;
@@ -63,8 +63,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public userId!: Ref<UserEntity>;
 
-  @prop({default: 0})
-  public commentCount!: number;
+  @prop({ required: false, default: 0})
+  public commentsCount!: number;
 
   @prop({required: true})
   public coords!: Coordinates;
