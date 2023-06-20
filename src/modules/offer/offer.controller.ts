@@ -8,12 +8,13 @@ import { OfferServiceInterface } from './offer-service.interface.js';
 import { fillDTO } from '../../core/utils/common.js';
 import OfferRdo from './rdo/offer.rdo.js';
 import ExtendedOfferRdo from './rdo/extended-offer.rdo.js';
-import CreateOfferDto from './dto/create-offer.dto';
-import UpdateOfferDto from './dto/update-offer.dto';
+import CreateOfferDto from './dto/create-offer.dto.js';
+import UpdateOfferDto from './dto/update-offer.dto.js';
 import { ParamsDictionary } from 'express-serve-static-core';
 import HttpError from '../../core/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -30,7 +31,12 @@ export default class OfferController extends Controller {
     this.logger.info('Register routes for OfferController…');
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Patch,

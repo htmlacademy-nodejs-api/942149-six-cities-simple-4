@@ -12,6 +12,7 @@ import { HttpMethod } from '../../types/http-method.enum.js';
 import { fillDTO } from '../../core/utils/common.js';
 import CommentRdo from './rdo/comment.rdo.js';
 import { ParamsDictionary } from 'express-serve-static-core';
+import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -28,7 +29,12 @@ export default class CommentController extends Controller {
 
     this.logger.info('Register routes for CommentController…');
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async create(
