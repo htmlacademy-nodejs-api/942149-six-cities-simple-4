@@ -18,6 +18,7 @@ export default class RestApplication {
     @inject(AppComponent.ConfigInterface) private readonly config: ConfigInterface<RestSchema>,
     @inject(AppComponent.DatabaseClientInterface) private readonly databaseClient: DatabaseClientInterface,
     @inject(AppComponent.OfferController) private readonly OfferController: ControllerInterface,
+    @inject(AppComponent.CommentController) private readonly CommentController: ControllerInterface,
     @inject(AppComponent.UserController) private readonly userController: ControllerInterface,
     @inject(AppComponent.ExceptionFilterInterface) private readonly exceptionFilter: ExceptionFilterInterface,
   ) {
@@ -43,6 +44,7 @@ export default class RestApplication {
     this.logger.info('Controller initialization…');
     this.expressApplication.use('/offers', this.OfferController.router);
     this.expressApplication.use('/users', this.userController.router);
+    this.expressApplication.use('/comments', this.CommentController.router);
     this.logger.info('Controller initialization completed');
   }
 
@@ -64,6 +66,10 @@ export default class RestApplication {
   private async _initMiddleware() {
     this.logger.info('Global middleware initialization…');
     this.expressApplication.use(express.json());
+    this.expressApplication.use(
+      '/upload',
+      express.static(this.config.get('UPLOAD_DIRECTORY'))
+    );
     this.logger.info('Global middleware initialization completed');
   }
 
