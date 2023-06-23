@@ -5,6 +5,7 @@
 /dist/
 /docs/
 /mongodb/
+/uploads/
 .idea/*
 
 .DS_Store

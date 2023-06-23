@@ -11,10 +11,9 @@ import ExtendedOfferRdo from './rdo/extended-offer.rdo.js';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import { ParamsDictionary } from 'express-serve-static-core';
-import HttpError from '../../core/errors/http-error.js';
-import { StatusCodes } from 'http-status-codes';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -41,19 +40,29 @@ export default class OfferController extends Controller {
       path: '/:offerId',
       method: HttpMethod.Patch,
       handler: this.update,
-      middlewares: [new ValidateObjectIdMiddleware('offerId'), new ValidateDtoMiddleware(UpdateOfferDto)]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+      ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+      ],
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.getDetails,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+      ]
     });
   }
 
@@ -98,12 +107,6 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const offer = await this.offersService.findById(params.offerId);
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        'offer not found'
-      );
-    }
     const offersToResponse = fillDTO(ExtendedOfferRdo, offer);
     this.ok(res, offersToResponse);
   }
