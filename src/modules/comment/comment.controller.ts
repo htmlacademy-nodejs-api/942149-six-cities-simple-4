@@ -14,6 +14,7 @@ import CommentRdo from './rdo/comment.rdo.js';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -33,7 +34,10 @@ export default class CommentController extends Controller {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateCommentDto)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateCommentDto)
+      ]
     });
     this.addRoute({
       path: '/:offerId',
@@ -44,7 +48,7 @@ export default class CommentController extends Controller {
   }
 
   public async create(
-    {body}: Request<object, object, CreateCommentDto>,
+    {body ,user}: Request<object, object, CreateCommentDto>,
     res: Response
   ): Promise<void> {
 
@@ -56,7 +60,7 @@ export default class CommentController extends Controller {
       );
     }
 
-    const comment = await this.commentService.create(body);
+    const comment = await this.commentService.create({ ...body, userId: user.id });
     await this.offerService.incCommentsCount(body.offerId);
     this.created(res, fillDTO(CommentRdo, comment));
   }

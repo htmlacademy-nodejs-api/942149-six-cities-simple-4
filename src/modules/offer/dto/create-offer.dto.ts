@@ -7,7 +7,6 @@ import {
   IsDateString,
   ArrayMaxSize,
   ArrayMinSize,
-  IsMongoId,
   IsObject,
   IsBoolean,
   MaxLength,
@@ -76,8 +75,7 @@ export default class CreateOfferDto {
   @ArrayUnique({ message: 'Field goods must be contain unique item' })
     amenitiesList!: Amenities[];
 
-  @IsMongoId()
-    userId!: string;
+  userId!: string;
 
   @IsInt()
     commentsCount!: number;
