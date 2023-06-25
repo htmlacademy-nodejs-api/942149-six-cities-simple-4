@@ -15,6 +15,7 @@ import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-obje
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { CheckIsUserOfferMiddleware } from '../../core/middlewares/check-user-offer.js';
 import { RestSchema } from '../../core/config/rest.schema.js';
 import { ConfigInterface } from '../../core/config/config.interface.js';
 
@@ -52,6 +53,7 @@ export default class OfferController extends Controller {
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDto),
         new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+        new CheckIsUserOfferMiddleware(this.offersService),
       ]
     });
     this.addRoute({
@@ -62,6 +64,7 @@ export default class OfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+        new CheckIsUserOfferMiddleware(this.offersService),
       ],
     });
     this.addRoute({
