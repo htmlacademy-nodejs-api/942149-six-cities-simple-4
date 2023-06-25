@@ -10,6 +10,22 @@ npm install
 
 Команда запустит процесс установки зависимостей проекта из **npm**.
 
+## Переменные окружения
+Необходимые настройки для запуска и работы сервиса, передаются с помощью переменных окружения.
+Список всех переменных окружения, с примерами значений и описанием:
+```env
+APP_PORT=5500
+SALT=secret_salt
+DB_HOST=192.168.0.110
+DB_USER=admin
+DB_PASSWORD=test
+DB_NAME=six-cities
+UPLOAD_DIRECTORY=upload
+JWT_SECRET=secret
+HOST=localhost
+STATIC_DIRECTORY_PATH=static
+```
+
 ### Сценарии
 
 В `package.json` предопределено несколько сценариев.

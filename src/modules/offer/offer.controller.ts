@@ -15,6 +15,8 @@ import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-obje
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
+import { ConfigInterface } from '../../core/config/config.interface.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -25,8 +27,9 @@ export default class OfferController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) logger: LoggerInterface,
     @inject(AppComponent.OfferServiceInterface) private readonly offersService: OfferServiceInterface,
+    @inject(AppComponent.ConfigInterface) configService: ConfigInterface<RestSchema>,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for OfferController…');
 
