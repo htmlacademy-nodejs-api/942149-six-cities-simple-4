@@ -15,8 +15,11 @@ import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-obje
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../core/middlewares/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { CheckIsUserOfferMiddleware } from '../../core/middlewares/check-user-offer.js';
 import { RestSchema } from '../../core/config/rest.schema.js';
 import { ConfigInterface } from '../../core/config/config.interface.js';
+import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
+import UploadImageResponse from './rdo/upload-image.response.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -52,6 +55,7 @@ export default class OfferController extends Controller {
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDto),
         new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+        new CheckIsUserOfferMiddleware(this.offersService),
       ]
     });
     this.addRoute({
@@ -62,6 +66,7 @@ export default class OfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+        new CheckIsUserOfferMiddleware(this.offersService),
       ],
     });
     this.addRoute({
@@ -71,6 +76,16 @@ export default class OfferController extends Controller {
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId/image',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
       ]
     });
   }
@@ -118,5 +133,12 @@ export default class OfferController extends Controller {
     const offer = await this.offersService.findById(params.offerId);
     const offersToResponse = fillDTO(ExtendedOfferRdo, offer);
     this.ok(res, offersToResponse);
+  }
+
+  public async uploadImage(req: Request<OfferDetailsParams>, res: Response) {
+    const {offerId} = req.params;
+    const updateDto = { preview: req.file?.filename };
+    await this.offersService.updateById(offerId, updateDto);
+    this.created(res, fillDTO(UploadImageResponse, {updateDto}));
   }
 }

@@ -10,7 +10,6 @@ import {
   IsObject,
   IsBoolean,
   MaxLength,
-  IsString,
   IsIn,
   MinLength,
   Min,
@@ -35,9 +34,6 @@ export default class CreateOfferDto {
 
   @IsIn(['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'])
     city!: City;
-
-  @IsString()
-    preview!: string;
 
   @IsArray()
   @ArrayMinSize(6)
