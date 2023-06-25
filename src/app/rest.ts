@@ -7,6 +7,7 @@ import { RestSchema } from '../core/config/rest.schema.js';
 import { AppComponent } from '../types/app-component.enum.js';
 import { inject, injectable } from 'inversify';
 import { getMongoURI } from '../core/utils/db.js';
+import { getFullServerPath } from '../core/utils/common.js';
 import express, { Express } from 'express';
 import { AuthenticateMiddleware } from '../core/middlewares/authenticate.middleware.js';
 
@@ -21,7 +22,9 @@ export default class RestApplication {
     @inject(AppComponent.OfferController) private readonly OfferController: ControllerInterface,
     @inject(AppComponent.CommentController) private readonly CommentController: ControllerInterface,
     @inject(AppComponent.UserController) private readonly userController: ControllerInterface,
-    @inject(AppComponent.ExceptionFilterInterface) private readonly exceptionFilter: ExceptionFilterInterface,
+    @inject(AppComponent.HttpErrorExceptionFilter) private readonly httpErrorExceptionFilter: ExceptionFilterInterface,
+    @inject(AppComponent.BaseExceptionFilter) private readonly baseExceptionFilter: ExceptionFilterInterface,
+    @inject(AppComponent.ValidationExceptionFilter) private readonly validationExceptionFilter: ExceptionFilterInterface,
   ) {
     this.expressApplication = express();
   }
@@ -51,7 +54,9 @@ export default class RestApplication {
 
   private async _initExceptionFilters() {
     this.logger.info('Exception filters initialization');
-    this.expressApplication.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
+    this.expressApplication.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
+    this.expressApplication.use(this.httpErrorExceptionFilter.catch.bind(this.httpErrorExceptionFilter));
+    this.expressApplication.use(this.baseExceptionFilter.catch.bind(this.baseExceptionFilter));
     this.logger.info('Exception filters completed');
   }
 
@@ -61,7 +66,7 @@ export default class RestApplication {
     const port = this.config.get('APP_PORT');
     this.expressApplication.listen(port);
 
-    this.logger.info(`Server started on http://localhost:${this.config.get('APP_PORT')}`);
+    this.logger.info(`Server started on ${getFullServerPath(this.config.get('HOST'), this.config.get('APP_PORT'))}`);
   }
 
   private async _initMiddleware() {
@@ -70,6 +75,10 @@ export default class RestApplication {
     this.expressApplication.use(
       '/upload',
       express.static(this.config.get('UPLOAD_DIRECTORY'))
+    );
+    this.expressApplication.use(
+      '/static',
+      express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
     const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
     this.expressApplication.use(authenticateMiddleware.execute.bind(authenticateMiddleware));

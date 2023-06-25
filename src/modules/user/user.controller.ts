@@ -24,9 +24,9 @@ export default class UserController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) protected readonly logger: LoggerInterface,
     @inject(AppComponent.UserServiceInterface) private readonly userService: UserServiceInterface,
-    @inject(AppComponent.ConfigInterface) private readonly configService: ConfigInterface<RestSchema>
+    @inject(AppComponent.ConfigInterface) protected readonly configService: ConfigInterface<RestSchema>,
   ) {
-    super(logger);
+    super(logger, configService);
     this.logger.info('Register routes for UserController…');
     this.addRoute({
       path: '/register',
@@ -101,10 +101,10 @@ export default class UserController extends Controller {
       }
     );
 
-    this.ok(res, fillDTO(LoggedUserRdo, {
-      email: user.email,
+    this.ok(res, {
+      ...fillDTO(LoggedUserRdo, user),
       token
-    }));
+    });
   }
 
   public async uploadAvatar(req: Request, res: Response) {
@@ -113,13 +113,8 @@ export default class UserController extends Controller {
     });
   }
 
-  public async checkAuthenticate({ user}: Request, res: Response) {
-    let foundedUser;
-    if (user) {
-      foundedUser = await this.userService.findByEmail(user.email);
-    }
-
-    if (!foundedUser) {
+  public async checkAuthenticate(req: Request, res: Response) {
+    if (! req.user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
         'Unauthorized',
@@ -127,6 +122,8 @@ export default class UserController extends Controller {
       );
     }
 
+    const { user: { email } } = req;
+    const foundedUser = await this.userService.findByEmail(email);
     this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
 }

@@ -15,6 +15,8 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
 import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
+import { ConfigInterface } from '../../core/config/config.interface.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -26,8 +28,9 @@ export default class CommentController extends Controller {
     @inject(AppComponent.LoggerInterface) logger: LoggerInterface,
     @inject(AppComponent.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
     @inject(AppComponent.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
+    @inject(AppComponent.ConfigInterface) configService: ConfigInterface<RestSchema>,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for CommentController…');
     this.addRoute({
