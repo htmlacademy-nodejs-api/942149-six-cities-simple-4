@@ -18,6 +18,7 @@ import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-obje
 import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
 import { JWT_ALGORITHM } from './user.constant.js';
 import LoggedUserRdo from './rdo/logged-user.rdo.js';
+import UploadUserAvatarResponse from './rdo/upload-user-avatar.response.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -108,9 +109,10 @@ export default class UserController extends Controller {
   }
 
   public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+    const {userId} = req.params;
+    const uploadFile = {avatarPath: req.file?.filename};
+    await this.userService.updateById(userId, uploadFile);
+    this.created(res, fillDTO(UploadUserAvatarResponse, uploadFile));
   }
 
   public async checkAuthenticate(req: Request, res: Response) {

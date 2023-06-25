@@ -18,6 +18,8 @@ import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.mid
 import { CheckIsUserOfferMiddleware } from '../../core/middlewares/check-user-offer.js';
 import { RestSchema } from '../../core/config/rest.schema.js';
 import { ConfigInterface } from '../../core/config/config.interface.js';
+import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
+import UploadImageResponse from './rdo/upload-image.response.js';
 
 type OfferDetailsParams = {
   offerId: string;
@@ -76,6 +78,16 @@ export default class OfferController extends Controller {
         new DocumentExistsMiddleware(this.offersService, 'Offer', 'offerId'),
       ]
     });
+    this.addRoute({
+      path: '/:offerId/image',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+      ]
+    });
   }
 
   public async index(
@@ -121,5 +133,12 @@ export default class OfferController extends Controller {
     const offer = await this.offersService.findById(params.offerId);
     const offersToResponse = fillDTO(ExtendedOfferRdo, offer);
     this.ok(res, offersToResponse);
+  }
+
+  public async uploadImage(req: Request<OfferDetailsParams>, res: Response) {
+    const {offerId} = req.params;
+    const updateDto = { preview: req.file?.filename };
+    await this.offersService.updateById(offerId, updateDto);
+    this.created(res, fillDTO(UploadImageResponse, {updateDto}));
   }
 }
