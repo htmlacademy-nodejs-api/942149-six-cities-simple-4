@@ -1,8 +1,13 @@
 import { IsMongoId, IsNumber, Max, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  MAX_COMMENT_LENGTH,
+  MAX_RATING_DECIMAL_PLACES,
+  MIN_COMMENT_LENGTH, MIN_RATING_VALUE, MAX_RATING_VALUE
+} from '../comment.constants.js';
 
 export default class CreateCommentDto {
-  @MinLength(5)
-  @MaxLength(1024, { message: 'Maximum text length must be 1024' })
+  @MinLength(MIN_COMMENT_LENGTH, { message: `Min text length must be ${MIN_COMMENT_LENGTH}` })
+  @MaxLength(MAX_COMMENT_LENGTH, { message: `Maximum text length must be ${MAX_COMMENT_LENGTH}` })
   public text!: string;
 
   @IsMongoId({ message: 'offerId must be a valid id' })
@@ -10,8 +15,8 @@ export default class CreateCommentDto {
 
   public userId!: string;
 
-  @IsNumber({ maxDecimalPlaces: 1 }, { message: 'must be an number with precision 1' })
-  @Min(1)
-  @Max(5)
+  @IsNumber({ maxDecimalPlaces: MAX_RATING_DECIMAL_PLACES }, { message: `must be an number with precision ${MAX_RATING_DECIMAL_PLACES}` })
+  @Min(MIN_RATING_VALUE)
+  @Max(MAX_RATING_VALUE)
   public rating!: number;
 }
